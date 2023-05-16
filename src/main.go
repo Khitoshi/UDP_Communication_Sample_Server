@@ -1,6 +1,8 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"net"
 	"os"
@@ -14,6 +16,11 @@ const (
 	// バッファサイズ
 	BUFFER_SIZE = 1024
 )
+
+type Data struct {
+	Name    string `json:"name"`
+	Message string `json:"message"`
+}
 
 func main() {
 	// サーバーアドレスの生成
@@ -49,18 +56,24 @@ func main() {
 			continue
 		}
 
-		message := string(buffer)
-		fmt.Printf("クライアントからのメッセージ [%s]: %s\n", clientAddr.String(), message)
+		//message := string(buffer)
+		//fmt.Printf("クライアントからのメッセージ [%s]: %s\n", clientAddr.String(), message)
 
-		/*
-			// "exit"が受信されたら終了
-			if message == "exit" {
-				break
-			}
-		*/
+		//データが小さかったり大きかったりするとデータの最後にNULLなどが入りエラーが発生するため
+		//jsonデータをトリミングする
+		trimmedBuffer := bytes.Trim(buffer, "\x00")
+		var d Data
+		err = json.Unmarshal(trimmedBuffer, &d)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		//output
+		fmt.Println("Name:", d.Name)
+		fmt.Println("Message:", d.Message)
 
 		//送信
-		_, err = conn.WriteToUDP([]byte(message), clientAddr)
+		_, err = conn.WriteToUDP(buffer, clientAddr)
 		if err != nil {
 			fmt.Println("read error: ", err)
 		}
