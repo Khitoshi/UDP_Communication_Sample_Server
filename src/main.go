@@ -24,6 +24,7 @@ func main() {
 			os.Exit(1)
 		}*/
 
+	//サーバーアドレスの生成
 	serverAddr := &net.UDPAddr{
 		IP:   net.ParseIP(SERVER_IP),
 		Port: SERVER_PORT,
@@ -39,8 +40,8 @@ func main() {
 
 	fmt.Println("サーバーが起動しました。")
 
-	// 受信ループ
 	for {
+		//受信
 		buffer := make([]byte, BUFFER_SIZE)
 		_, clientAddr, err := conn.ReadFromUDP(buffer)
 		if err != nil {
@@ -51,9 +52,17 @@ func main() {
 		message := string(buffer)
 		fmt.Printf("クライアントからのメッセージ [%s]: %s\n", clientAddr.String(), message)
 
-		// "exit"が受信されたら終了
-		if message == "exit" {
-			break
+		/*
+			// "exit"が受信されたら終了
+			if message == "exit" {
+				break
+			}
+		*/
+
+		//送信
+		_, err = conn.WriteToUDP([]byte(message), clientAddr)
+		if err != nil {
+			fmt.Println("read error: ", err)
 		}
 	}
 
