@@ -6,23 +6,17 @@ import (
 )
 
 func main() {
-	//プレイヤーとの通信する構造体生成
-	pc, err := NewPlayerConnection()
+
+	server, err := NewServer()
 	if err != nil {
-		log.Fatal("PlayerConnectionの生成に失敗: ", err)
+		log.Fatal(err)
 	}
 
-	endchan := make(chan bool, 1)
-	//更新処理
-	go func() {
-		pc.UpdatePlayerConnection()
-		endchan <- true
-	}()
+	err = server.Listen()
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	//待機
-	<-endchan
-
-	pc.conn.Close()
-	//defer conn.Close()
-	fmt.Println("サーバーが終了しました。")
+	//server終了
+	fmt.Println("server終了")
 }
