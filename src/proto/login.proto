@@ -2,9 +2,9 @@
 syntax = "proto3";
 
 //Protofile generation location
-option  go_package = "src/protocode";
+option  go_package = "";
 
-package services;
+package "login"
 
 //service
 service LoginService {
