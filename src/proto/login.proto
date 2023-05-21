@@ -2,9 +2,9 @@
 syntax = "proto3";
 
 //Protofile generation location
-option  go_package = "";
+option  go_package = "github.com/Khitoshi/UDP_Communication_Sample_Server/tree/master/src/pb";
 
-package "login"
+package login;
 
 //service
 service LoginService {
