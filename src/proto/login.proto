@@ -1,0 +1,32 @@
+// proto of version
+syntax = "proto3";
+
+//Protofile generation location
+option  go_package = "src/protocode";
+
+package services;
+
+//service
+service LoginService {
+    rpc Login(LoginRequest) returns(LoginResponse);
+}
+
+/*
+*   注意
+*   name 等に代入している番号はProtocol Buffersが識別するための物なので
+*   フィールド内での重複はエラーになる
+*
+*/
+//Data sent from the client to the server
+//client -> server
+message LoginRequest{
+    string name = 1;
+    string password = 2;
+}
+
+//Data sent from the server to the client
+//server -> server
+message LoginResponse{
+    string id = 1;
+    string name = 2;
+}
